@@ -13,6 +13,7 @@ include (${CMAKE_ROOT}/Modules/CheckFunctionExists.cmake)
 check_function_exists (log HAVE_LOG)
 check_function_exists (exp HAVE_EXP)
 
+message(status, "CMAKE_ROOT:${CMAKE_ROOT}")
 
 # should we use our own math functions
 option(USE_MYMATH "Use tutorial provided math implementation" ON)
@@ -29,15 +30,15 @@ configure_file (
 include_directories ("${PROJECT_BINARY_DIR}")
 
 
-message("PROJECT_SOURCE_DIR:${PROJECT_SOURCE_DIR}")
-message("PROJECT_BINARY_DIR:${PROJECT_BINARY_DIR}")
+message(status, "PROJECT_SOURCE_DIR:${PROJECT_SOURCE_DIR}")
+message(status, "PROJECT_BINARY_DIR:${PROJECT_BINARY_DIR}")
 
 # add the MathFunctions library?
-# 通过配置USB_MYMATH来决定是否编译和使用MathFunctions.注意上面的”EXTRA_LIBS”变量是用来收集每一个可选库的,以便他们链接到可执行程序中.这是一个保持大项目工程可选库清洁的通用方法
+# 通过配置USB_MYMATH来决定是否编译和使用MathFunctions.”EXTRA_LIBS”变量是用来收集每一个可选库的,以便他们链接到可执行程序中.这是一个保持大项目工程可选库清洁的通用方法
 if (USE_MYMATH)
   include_directories ("${PROJECT_SOURCE_DIR}/MathFunctions")
-  add_subdirectory (MathFunctions)
-  set (EXTRA_LIBS ${EXTRA_LIBS} MathFunctions)
+  add_subdirectory (MathFunctions) # 使得子目录MathFunctions也能被编译
+  set (EXTRA_LIBS ${EXTRA_LIBS} MathSqrt)
 endif (USE_MYMATH)
  
 # add the executable
@@ -50,17 +51,24 @@ add_executable (Tutorial tutorial.cxx)
 # [item]表示库文件没有后缀的名字
 target_link_libraries (Tutorial  ${EXTRA_LIBS})
 
+message(status, "EXTRA_LIBS:${EXTRA_LIBS}")
 
+##################################################################################
+# cmake 后 build 目录执行 make install
 # add the install targets
 install (TARGETS Tutorial DESTINATION bin)
 install (FILES "${PROJECT_BINARY_DIR}/TutorialConfig.h" DESTINATION include)
 
-# does the application run
+message(status, "CMAKE_INSTALL_PREFIX:${CMAKE_INSTALL_PREFIX}")
+
+#################################################################################
+# cmake 后 build 目录执行make test
+# does the application run  --- NAME COMMAND ARGS
 add_test (TutorialRuns Tutorial 25)
  
 # does the usage message work?
 add_test (TutorialUsage Tutorial)
-set_tests_properties (TutorialUsage
+set_tests_properties (TutorialUsage   # NAME PROPERTY VALUE
   PROPERTIES 
   PASS_REGULAR_EXPRESSION "Usage:.*number"
   )
