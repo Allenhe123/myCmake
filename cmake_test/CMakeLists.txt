@@ -15,11 +15,11 @@ check_function_exists (exp HAVE_EXP)
 
 message(status, "CMAKE_ROOT:${CMAKE_ROOT}")
 
-# should we use our own math functions
+# option 命令添加了一个 USE_MYMATH 编译选项
 option(USE_MYMATH "Use tutorial provided math implementation" ON)
  
-# configure a header file to pass some of the CMake settings
-# to the source code
+# configure a header file to pass some of the CMake settings to the source code
+# 加入一个配置头文件TutorialConfig.h ，这个文件由CMake从TutorialConfig.h.in生成，通过这样的机制，将可以通过预定义一些参数和变量来控制代码的生成。
 configure_file (
   "${PROJECT_SOURCE_DIR}/TutorialConfig.h.in"
   "${PROJECT_BINARY_DIR}/TutorialConfig.h"
@@ -62,6 +62,9 @@ install (FILES "${PROJECT_BINARY_DIR}/TutorialConfig.h" DESTINATION include)
 message(status, "CMAKE_INSTALL_PREFIX:${CMAKE_INSTALL_PREFIX}")
 
 #################################################################################
+# 启用测试
+enable_testing()
+
 # cmake 后 build 目录执行make test
 # does the application run  --- NAME COMMAND ARGS
 add_test (TutorialRuns Tutorial 25)
@@ -91,13 +94,14 @@ do_test (25 "25 is 5")
 do_test (-25 "-25 is 0")
 do_test (0.0001 "0.0001 is 0.01")
 
-
+# 生成二进制安装包：cpack -C CPackConfig.cmake
+# 生成源码安装包: cpack -C CPackSourceConfig.cmake
 # build a CPack driven installer package
-include (InstallRequiredSystemLibraries)
-set (CPACK_RESOURCE_FILE_LICENSE  
-     "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
+include (InstallRequiredSystemLibraries)   # 导入 InstallRequiredSystemLibraries 模块，以便之后导入 CPack 模块；
+# 设置一些 CPack 相关变量，包括版权信息和版本信息，其中版本信息用了上一节定义的版本号
+set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
 set (CPACK_PACKAGE_VERSION_MAJOR "${Tutorial_VERSION_MAJOR}")
 set (CPACK_PACKAGE_VERSION_MINOR "${Tutorial_VERSION_MINOR}")
-include (CPack)
+include (CPack)   # 导入 CPack 模块
 
 
