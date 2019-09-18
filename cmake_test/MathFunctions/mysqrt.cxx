@@ -2,7 +2,6 @@
 #define MATH_FUNC_H
 
 #include "mysqrt.h"
-
 #include <stdio.h>
 
 // a hack square root calculation using simple operations
