@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 2.8)
+
+project(hello)
+set(SRC_LIST main.c)
+message(status " SRC_LIST:" ${SRC_LIST})
+message(status " binary dir:" ${hello_BINARY_DIR})
+message(status " src dir:" ${hello_SOURCE_DIR})
+message(status " CMAKE_BINARY_DIR:" ${CMAKE_BINARY_DIR})
+message(status " PROJECT_BINARY_DIR:" ${PROJECT_BINARY_DIR})
+message(status " PROJECT_SOURCE_DIR:" ${PROJECT_SOURCE_DIR})
+add_executable(hello ${SRC_LIST})

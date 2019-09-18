@@ -1,0 +1,5 @@
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
+message(status ${EXECUTABLE_OUTPUT_PATH})
+message(status ${LIBRARY_OUTPUT_PATH})
+add_executable(hello main.c)
